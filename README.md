@@ -89,12 +89,11 @@ Latest Bookings: See the most recent 5 bookings on the dashboard.
    ![Homepage Screenshot](images/home.png)
 
 2. Admin Dashboard  
-   ![Admin Dashboard Screenshot](images/dashboard.png)  
+   ![Dashboard Screenshot](images/dashboard.png)  
    ![Bar Chart Screenshot](images/bar.png)
-
 3. Booking Form  
    ![Booking Form Screenshot](images/booking_form.png)
-
+   
 📩 Email Notifications
 
 Customer Confirmation: An email with booking details is sent to customers.
