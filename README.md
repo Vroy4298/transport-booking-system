@@ -85,18 +85,18 @@ Latest Bookings: See the most recent 5 bookings on the dashboard.
 
 📊 Screenshots & Preview
 1. Homepage
-   ![Admin Dashboard Screenshot](images/home.png)
+   ![Homepage Screenshot](images/home.png)
 
    
 1. Admin Dashboard
    ![Admin Dashboard Screenshot](images/dashboard.png)
 
-   ![Admin Dashboard Screenshot](images/bar.png)
+   ![Bar Chart Screenshot](images/bar.png)
     
    
 
 2. Booking Form
-   ![Admin Dashboard Screenshot](images/booking_form.png)
+   ![Booking Form Screenshot](images/booking_form.png)
 
 📩 Email Notifications
 
