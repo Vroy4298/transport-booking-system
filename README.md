@@ -85,13 +85,14 @@ Latest Bookings: See the most recent 5 bookings on the dashboard.
 
 📊 Screenshots & Preview
 1. Admin Dashboard
-   ![Admin Dashboard Screenshot](E:\projects\myapp\images\Screenshot 2025-08-30 142324.png)
-   ![Admin Dashboard Screenshot](E:\projects\myapp\images\Screenshot 2025-08-30 142349.png)
+   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 142324.png)
+
+   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 142349.png)
     
    
 
 2. Booking Form
-   ![Admin Dashboard Screenshot](E:\projects\myapp\images\Screenshot 2025-08-30 143218.png)
+   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 143218.png)
 
 📩 Email Notifications
 
