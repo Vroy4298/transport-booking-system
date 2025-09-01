@@ -84,15 +84,19 @@ Charts: Status breakdown (Pie Chart) and Daily Bookings (Bar Chart).
 Latest Bookings: See the most recent 5 bookings on the dashboard.
 
 📊 Screenshots & Preview
-1. Admin Dashboard
-   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 142324.png)
+1. Homepage
+   ![Admin Dashboard Screenshot](images\home.png)
 
-   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 142349.png)
+   
+1. Admin Dashboard
+   ![Admin Dashboard Screenshot](images\dashboard.png)
+
+   ![Admin Dashboard Screenshot](images\bar.png)
     
    
 
 2. Booking Form
-   ![Admin Dashboard Screenshot](images\Screenshot 2025-08-30 143218.png)
+   ![Admin Dashboard Screenshot](images\booking_form.png)
 
 📩 Email Notifications
 
