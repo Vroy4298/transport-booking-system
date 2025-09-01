@@ -1,39 +1,32 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
-
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reset Password</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7f7; }
+    .container { max-width: 400px; margin: 80px auto; background: #fff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    h1 { text-align: center; margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    button { margin-top: 15px; width: 100%; background: #17a2b8; color: #fff; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #117a8b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reset Password</h1>
+    <form method="POST" action="{{ route('password.update') }}">
+      @csrf
+      <input type="hidden" name="token" value="{{ $request->route('token') }}">
+      <label>Email</label>
+      <input type="email" name="email" required autofocus>
+      <label>New Password</label>
+      <input type="password" name="password" required>
+      <label>Confirm Password</label>
+      <input type="password" name="password_confirmation" required>
+      <button type="submit">Reset Password</button>
     </form>
-</x-guest-layout>
+  </div>
+</body>
+</html>
