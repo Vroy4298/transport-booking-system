@@ -19,6 +19,9 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
+# ✅ Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 # Copy composer files first (to cache dependencies)
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
