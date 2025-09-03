@@ -38,6 +38,9 @@ RUN composer install --no-dev --optimize-autoloader
 # Expose port 80
 EXPOSE 80
 
+# Run migrations before cache clear
+RUN php artisan migrate --force || true
+
 # Run Laravel setup when container starts (not at build)
 CMD php artisan config:clear \
     && php artisan cache:clear \
