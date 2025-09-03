@@ -2,13 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
-use App\Http\Controllers\AdminDashboardController;
-
 
 // Public pages
 Route::view('/', 'pages.home');
@@ -32,16 +29,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin (protected)
-Route::middleware(['auth'])->group(function () {
+// Admin (only admins can access)
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('book.index');
     Route::patch('/admin/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('book.updateStatus');
     Route::get('/admin/bookings/export', [BookingController::class, 'export'])->name('book.export');
 });
 
+// Debug route to check DB connection
 Route::get('/debug-error', function () {
     try {
-        // Test DB connection
         DB::connection()->getPdo();
 
         return response()->json([
@@ -50,10 +47,8 @@ Route::get('/debug-error', function () {
             'url'    => config('app.url'),
         ]);
     } catch (\Exception $e) {
-        // Log the error
         Log::error($e);
 
-        // Show error + stack trace in browser
         return response()->json([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
