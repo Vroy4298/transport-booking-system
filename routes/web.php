@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\AdminDashboardController;
 
 
@@ -34,6 +37,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('book.index');
     Route::patch('/admin/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('book.updateStatus');
     Route::get('/admin/bookings/export', [BookingController::class, 'export'])->name('book.export');
+});
+
+Route::get('/debug-error', function () {
+    try {
+        // Test DB connection
+        DB::connection()->getPdo();
+
+        return response()->json([
+            'status' => '✅ DB Connected successfully!',
+            'env'    => config('app.env'),
+            'url'    => config('app.url'),
+        ]);
+    } catch (\Exception $e) {
+        // Log the error
+        Log::error($e);
+
+        // Show error + stack trace in browser
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
 });
 
 require __DIR__.'/auth.php';
