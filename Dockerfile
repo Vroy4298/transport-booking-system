@@ -19,8 +19,12 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy all app files
-COPY . /var/www/html
+# Copy composer files first (to cache dependencies)
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
+
+# Copy the rest of the app
+COPY . .
 
 # Point Apache to Laravel public directory
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
@@ -29,22 +33,8 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
 # Expose port 80
 EXPOSE 80
 
-# Run migrations before cache clear
-RUN php artisan migrate --force || true
-
-# Run Laravel setup when container starts (not at build)
-CMD php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear \
-    && php artisan migrate --force || true \
-    && apache2-foreground
+# Run migrations then start Apache
+CMD php artisan migrate --force && apache2-foreground
