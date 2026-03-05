@@ -3,21 +3,17 @@
 namespace App\Mail;
 
 use App\Models\Booking;
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CustomerBookingMail extends Mailable implements ShouldQueue
-
-
+class CustomerBookingMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     public $booking;
 
     /**
-     * Creating a new message instance.
+     * Create a new message instance.
      */
     public function __construct(Booking $booking)
     {
@@ -25,12 +21,11 @@ class CustomerBookingMail extends Mailable implements ShouldQueue
     }
 
     /**
-     * Building the message.
+     * Build the message.
      */
-   public function build(): self
-{
-    return $this->subject('Your Booking Confirmation - Speed On Transport')
-                ->view('emails.customer-booking');
-}
-
+    public function build(): self
+    {
+        return $this->subject('Your Booking Confirmation - Speed On Transport')
+            ->view('emails.customer-booking');
+    }
 }

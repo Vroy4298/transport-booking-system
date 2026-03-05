@@ -1,108 +1,128 @@
 @extends('layouts.public')
 
+@section('title', 'Book a Ride')
+@section('meta_description', 'Book your transport with Speed On Transport. Fill in your pickup details and we will confirm your booking shortly.')
+
 @section('content')
-  <h1 class="text-3xl font-bold mb-6">Book Your Ride</h1>
 
-  <!-- Success Message -->
-  @if (session('success'))
-    <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded">
-      {{ session('success') }}
-    </div>
-  @endif
+  <section class="py-20 px-6 relative overflow-hidden">
+    <div class="absolute inset-0"
+      style="background-image: radial-gradient(ellipse at 30% 10%, rgba(245,158,11,0.08) 0%, transparent 55%);"></div>
+    <div class="relative max-w-2xl mx-auto">
 
-  <!-- Validation Errors -->
-  @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded">
-      <strong>Fix these issues:</strong>
-      <ul class="mt-2 list-disc list-inside">
-        @foreach ($errors->all() as $err)
-          <li>{{ $err }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif
-
-  <form action="{{ route('book.store') }}" method="POST" class="space-y-4 bg-white shadow rounded-lg p-6">
-    @csrf
-
-    <!-- Name -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Name</label>
-      <input type="text" name="name" value="{{ old('name') }}" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <!-- Email -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Email</label>
-      <input type="email" name="email" value="{{ old('email') }}" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <!-- Phone -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Phone</label>
-      <input type="text" name="phone" value="{{ old('phone') }}" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <!-- Pickup Location -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Pickup Location</label>
-      <input type="text" name="pickup_location" value="{{ old('pickup_location') }}" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <!-- Drop-off Location -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Drop-off Location</label>
-      <input type="text" name="dropoff_location" value="{{ old('dropoff_location') }}" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <!-- Date & Time -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Pickup Date</label>
-        <input type="date" name="pickup_date" value="{{ old('pickup_date') }}" required
-               class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      {{-- Header --}}
+      <div class="text-center mb-10">
+        <span class="text-amber-400 text-sm font-semibold uppercase tracking-widest">Get A Ride</span>
+        <h1 class="text-4xl font-extrabold text-white mt-2">Book Your <span class="gradient-text">Ride</span></h1>
+        <p class="text-gray-400 mt-2 text-sm">Fill out the form below and we'll confirm your booking promptly.</p>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Pickup Time</label>
-        <input type="time" name="pickup_time" value="{{ old('pickup_time') }}" required
-               class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-      </div>
-    </div>
 
-    <!-- Vehicle Type -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Vehicle Type (optional)</label>
-      <select name="vehicle_type"
-              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        <option value="">-- Select Vehicle --</option>
-        <option value="Mini Truck" {{ old('vehicle_type')==='Mini Truck' ? 'selected' : '' }}>Mini Truck</option>
-        <option value="Pickup" {{ old('vehicle_type')==='Pickup' ? 'selected' : '' }}>Pickup</option>
-        <option value="Tata Ace" {{ old('vehicle_type')==='Tata Ace' ? 'selected' : '' }}>Tata Ace</option>
-        <option value="Tempo" {{ old('vehicle_type')==='Tempo' ? 'selected' : '' }}>Tempo</option>
-        <option value="Container" {{ old('vehicle_type')==='Container' ? 'selected' : '' }}>Container</option>
-        <option value="Trailer" {{ old('vehicle_type')==='Trailer' ? 'selected' : '' }}>Trailer</option>
-        <option value="Other" {{ old('vehicle_type')==='Other' ? 'selected' : '' }}>Other</option>
-      </select>
-    </div>
+      {{-- Success --}}
+      @if (session('success'))
+        <div
+          class="mb-6 p-4 bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 rounded-xl flex items-start gap-3">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{ session('success') }}</span>
+        </div>
+      @endif
 
-    <!-- Notes -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Notes (optional)</label>
-      <textarea name="notes" rows="4"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('notes') }}</textarea>
-    </div>
+      {{-- Errors --}}
+      @if ($errors->any())
+        <div class="mb-6 p-4 bg-red-500/15 border border-red-500/40 text-red-300 rounded-xl">
+          <p class="font-semibold mb-2">Please fix the following:</p>
+          <ul class="list-disc list-inside space-y-1 text-sm">
+            @foreach ($errors->all() as $err)
+              <li>{{ $err }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
 
-    <!-- Submit -->
-    <div>
-      <button type="submit"
-              class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">
-        Submit Booking
-      </button>
+      {{-- Form --}}
+      <form action="{{ route('book.store') }}" method="POST" class="glass rounded-2xl p-8 space-y-5">
+        @csrf
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Full Name <span
+                class="text-amber-400">*</span></label>
+            <input type="text" name="name" value="{{ old('name') }}" required placeholder="Your full name"
+              class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Phone <span
+                class="text-amber-400">*</span></label>
+            <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="+91 XXXXX XXXXX"
+              class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Email <span class="text-amber-400">*</span></label>
+          <input type="email" name="email" value="{{ old('email') }}" required placeholder="you@example.com"
+            class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Pickup Location <span
+                class="text-amber-400">*</span></label>
+            <input type="text" name="pickup_location" value="{{ old('pickup_location') }}" required
+              placeholder="e.g. Mumbai, Dadar"
+              class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Drop-off Location <span
+                class="text-amber-400">*</span></label>
+            <input type="text" name="dropoff_location" value="{{ old('dropoff_location') }}" required
+              placeholder="e.g. Pune, Shivajinagar"
+              class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Pickup Date <span
+                class="text-amber-400">*</span></label>
+            <input type="date" name="pickup_date" value="{{ old('pickup_date') }}" required
+              class="w-full bg-slate-700/60 border border-white/10 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Pickup Time <span
+                class="text-amber-400">*</span></label>
+            <input type="time" name="pickup_time" value="{{ old('pickup_time') }}" required
+              class="w-full bg-slate-700/60 border border-white/10 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Vehicle Type <span
+              class="text-gray-500">(optional)</span></label>
+          <select name="vehicle_type"
+            class="w-full bg-slate-700/60 border border-white/10 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
+            <option value="">-- Select a vehicle --</option>
+            @foreach(['Mini Truck', 'Pickup', 'Tata Ace', 'Tempo', 'Container', 'Trailer', 'Other'] as $v)
+              <option value="{{ $v }}" {{ old('vehicle_type') === $v ? 'selected' : '' }}>{{ $v }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Additional Notes <span
+              class="text-gray-500">(optional)</span></label>
+          <textarea name="notes" rows="3" placeholder="Special instructions, cargo details, etc."
+            class="w-full bg-slate-700/60 border border-white/10 text-white placeholder-gray-500 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition resize-none">{{ old('notes') }}</textarea>
+        </div>
+
+        <button type="submit" class="btn-gold w-full text-slate-900 font-bold py-4 rounded-xl text-lg shadow-xl">
+          Submit Booking →
+        </button>
+      </form>
+
     </div>
-  </form>
+  </section>
+
 @endsection

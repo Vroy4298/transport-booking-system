@@ -1,148 +1,125 @@
 @extends('layouts.admin')
 
+@section('page_title', 'Dashboard')
+
 @section('content')
-  <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
-  <!-- Stats Cards -->
-  <div class="grid md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow text-center">
-      <h2 class="text-lg font-semibold text-gray-600">Total Bookings</h2>
-      <p class="text-3xl font-bold text-gray-900 mt-2">{{ $total }}</p>
+  {{-- Stat Cards --}}
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    @foreach([
+        ['Total', 'bg-slate-800', 'text-white', 'text-gray-400', $total, 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+        ['Pending', 'bg-amber-500/15', 'text-amber-400', 'text-amber-300', $pending, 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+        ['Confirmed', 'bg-emerald-500/15', 'text-emerald-400', 'text-emerald-300', $confirmed, 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+        ['Cancelled', 'bg-red-500/15', 'text-red-400', 'text-red-300', $cancelled, 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
+      ] as [$label, $bg, $color, $labelColor, $val, $icon])
+       <div class="glass rounded-2xl p-5 {{ $bg }}">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-semibold uppercase tracking-widest {{ $labelColor }}">{{ $label }}</span>
+          <svg class="w-5 h-5 {{ $color }} opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $icon }}"/>
+          </svg>
+        </div>
+        <p class="text-4xl font-extrabold {{ $color }}">{{ $val }}</p>
+      </div>
+    @endforeach
+  </div>
+
+  {{-- Charts Row --}}
+  <div class="grid lg:grid-cols-2 gap-6 mb-8">
+    {{-- Pie Chart --}}
+    <div class="glass rounded-2xl p-6">
+      <h2 class="text-base font-bold text-white mb-4">Booking Status Overview</h2>
+      <div class="max-w-[260px] mx-auto">
+        <canvas id="bookingsChart"></canvas>
+      </div>
     </div>
-    <div class="bg-yellow-50 p-6 rounded-lg shadow text-center">
-      <h2 class="text-lg font-semibold text-yellow-700">Pending</h2>
-      <p class="text-3xl font-bold text-yellow-900 mt-2">{{ $pending }}</p>
-    </div>
-    <div class="bg-green-50 p-6 rounded-lg shadow text-center">
-      <h2 class="text-lg font-semibold text-green-700">Confirmed</h2>
-      <p class="text-3xl font-bold text-green-900 mt-2">{{ $confirmed }}</p>
-    </div>
-    <div class="bg-red-50 p-6 rounded-lg shadow text-center">
-      <h2 class="text-lg font-semibold text-red-700">Cancelled</h2>
-      <p class="text-3xl font-bold text-red-900 mt-2">{{ $cancelled }}</p>
+    {{-- Bar Chart --}}
+    <div class="glass rounded-2xl p-6">
+      <h2 class="text-base font-bold text-white mb-4">Bookings — Last 7 Days</h2>
+      <div class="h-56">
+        <canvas id="bookingsByDateChart"></canvas>
+      </div>
     </div>
   </div>
 
-  <!-- Quick Links -->
-  <div class="bg-white p-6 rounded-lg shadow mb-8">
-    <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
-    <div class="space-x-4">
-      <a href="{{ route('book.index') }}" 
-         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">View Bookings</a>
-      <a href="{{ route('book.export') }}" 
-         class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Export Bookings</a>
+
+  {{-- Quick Actions --}}
+  <div class="glass rounded-2xl p-5 mb-8
+      flex items-center gap-4 flex-wrap">
+    <span class="text-sm font-semibold text-gray-300">Quick Actions:</span>
+    <a href="{{ route('book.index') }}" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold text-sm px-5 py-2 rounded-lg transition-colors">
+      View All Bookings
+    </a>
+    <a href="{{ route('book.export') }}" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-sm px-5 py-2 rounded-lg transition-colors">
+      Export to Excel
+    </a>
+  </div>
+
+  {{-- Latest Bookings --}}
+  <div class="glass rounded-2xl overflow-hidden">
+    <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+      <h2 class="text-base font-bold text-white">Latest Bookings</h2>
+      <a href="{{ route('book.index') }}" class="text-amber-400 text-xs hover:underline">View all →</a>
     </div>
-  </div>
-
-  <!-- Chart Section -->
-<div class="bg-white p-6 rounded-lg shadow">
-  <h2 class="text-xl font-bold mb-4">Bookings Overview</h2>
-  <div class="max-w-md mx-auto"> <!-- limit chart width -->
-    <canvas id="bookingsChart"></canvas>
-  </div>
-</div>
-
-<!-- Bar Chart Section -->
-<div class="bg-white p-6 rounded-lg shadow mt-8">
-  <h2 class="text-xl font-bold mb-4">Bookings in Last 7 Days</h2>
-  <div class="h-64">
-    <canvas id="bookingsByDateChart"></canvas>
-  </div>
-</div>
-
-<!-- Latest Bookings Section -->
-<div class="bg-white p-6 rounded-lg shadow mt-8">
-  <h2 class="text-xl font-bold mb-4">Latest Bookings</h2>
-  <div class="overflow-x-auto">
-    <table class="w-full border-collapse border border-gray-300 text-sm">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="border p-2">Name</th>
-          <th class="border p-2">Phone</th>
-          <th class="border p-2">Pickup</th>
-          <th class="border p-2">Dropoff</th>
-          <th class="border p-2">Status</th>
-          <th class="border p-2">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse($latestBookings as $b)
-          <tr class="hover:bg-gray-50">
-            <td class="border p-2">{{ $b->name }}</td>
-            <td class="border p-2">{{ $b->phone }}</td>
-            <td class="border p-2">{{ $b->pickup_location }}</td>
-            <td class="border p-2">{{ $b->dropoff_location }}</td>
-            <td class="border p-2">
-              <span class="px-2 py-1 rounded text-xs font-semibold
-                @if($b->status == 'pending') bg-yellow-100 text-yellow-700
-                @elseif($b->status == 'confirmed') bg-green-100 text-green-700
-                @else bg-red-100 text-red-700
-                @endif">
-                {{ ucfirst($b->status) }}
-              </span>
-            </td>
-            <td class="border p-2">{{ $b->created_at->format('Y-m-d H:i') }}</td>
-          </tr>
-        @empty
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-800/80">
           <tr>
-            <td colspan="6" class="text-center py-4">No bookings yet.</td>
+            @foreach(['Name', 'Phone', 'Pickup', 'Dropoff', 'Status', 'Created'] as $h)
+              <th class="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ $h }}</th>
+            @endforeach
           </tr>
-        @endforelse
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          @forelse($latestBookings as $b)
+                    <tr class="hover:bg-white/[0.03] transition-colors">
+                      <td class="px-5 py-3 text-white font-medium">{{ $b->name }}</td>
+                      <td cla
+            s             s="px-5 py-3 text-gray-400">{{ $b->phone }}</td>
+                      <td class="px-5 py-3 text-gray-400 truncate max-w-[140px]">{{ $b->pickup_location }}</td>
+                      <td class="px-5 py-3 text-gray-400 truncate max-w-[140px]">{{ $b->dropoff_location }}</td>
+                      <td class="px-5 py-3">
+                        @php $sc = ['pending' => 'bg-amber-500/20 text-amber-400', 'confirmed' => 'bg-emerald-500/20 text-emerald-400', 'cancelled' => 'bg-red-500/20 text-red-400']; @endphp
+
+                      <span class="px-2.5 py-1 text-xs font-semibold rounded-full {{ $sc[$b->status] ?? 'bg-gray-700 text-gray-300' }}">{{ ucfirst($b->status) }}</span>
+                      </td>
+                      <td class="px-5 py-3 text-gray-500 text-xs">{{ $b->created_at->format('d M, H:i') }}</td>
+                    </tr>
+          @empty
+            <tr><td colspan="6" class="text-center py-8 text-gray-500">No bookings yet.</td></tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-
-<script>
-  const ctx2 = document.getElementById('bookingsByDateChart').getContext('2d');
-  new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: @json($chartByDate['labels']),
-      datasets: [{
-        label: 'Bookings',
-        data: @json($chartByDate['values']),
-        backgroundColor: '#3b82f6' // Tailwind blue
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
+  {{-- Charts JS (after Chart.js is loaded in layout head) --}}
+  <script>
+    // Pie chart
+      new Chart(document.getElementById('bookingsChart').getContext('2d'), {
+      type: 'doughnut',
+             data: {
+        labels: @json($chartData['labels']),
+        datasets: [{ data: @json($chartData['values']), backgroundColor: ['#f59e0b','#10b981','#ef4444'], borderWidth: 0, hoverOffset: 6 }]
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { stepSize: 1 }
+      options: { responsive: true, cutout: '65%', plugins: { legend: { position:'bottom', labels:{ color:'#94a3b8', font:{size:12} } } } }
+    });
+    // Bar chart
+        new Chart(document.getElementById('bookingsByDateChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: @json($chartByDate['labels']),
+        datasets: [{ label:'Bookings', data: @json($chartByDate['values']), backgroundColor:'#f59e0b', borderRadius:6, borderWidth:0 }]
+      },
+        options: {
+              responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color:'rgba(255,255,255,0.05)' }, ticks: { color:'#64748b' } },
+          y: { beginAtZero:true, ticks:{ stepSize:1, color:'#64748b' }, grid:{ color:'rgba(255,255,255,0.05)' } }
         }
       }
-    }
-  });
-</script>
+    });
+  </script>
 
- <!-- Chart.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const ctx = document.getElementById('bookingsChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: @json($chartData['labels']),
-      datasets: [{
-        data: @json($chartData['values']),
-        backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false, // allow custom sizing
-      plugins: {
-        legend: { position: 'bottom' }
-      }
-    }
-  });
-</script>
 @endsection

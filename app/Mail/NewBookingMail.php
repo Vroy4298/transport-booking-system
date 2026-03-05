@@ -3,14 +3,12 @@
 namespace App\Mail;
 
 use App\Models\Booking;
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewBookingMail extends Mailable implements ShouldQueue
+class NewBookingMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     public $booking;
 
@@ -25,10 +23,10 @@ class NewBookingMail extends Mailable implements ShouldQueue
     /**
      * Build the message.
      */
-   public function build(): self
-{
-    return $this->subject('New Booking Received - Speed On Transport')
-                ->view('emails.new-booking');
-}
+    public function build(): self
+    {
+        return $this->subject('New Booking Received - Speed On Transport')
+            ->view('emails.new-booking');
+    }
 
 }
