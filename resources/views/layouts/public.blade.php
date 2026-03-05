@@ -124,6 +124,9 @@
         @auth
           <a href="/dashboard"
             class="nav-link text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors">Dashboard</a>
+        @else
+          <a href="{{ route('login') }}"
+            class="nav-link text-gray-300 hover:text-white text-sm font-medium transition-colors">Login</a>
         @endauth
         <a href="/book" class="btn-gold text-slate-900 font-semibold px-5 py-2 rounded-lg text-sm shadow-lg">
           Book Now →
