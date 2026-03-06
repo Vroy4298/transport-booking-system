@@ -38,5 +38,5 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Expose port 80
 EXPOSE 80
 
-# Run migrations + start apache
-CMD php artisan migrate --force && apache2-foreground
+# Run migrations (best-effort) then always start Apache
+CMD bash -c "php artisan config:clear && php artisan migrate --force --no-interaction || echo 'Migration failed, continuing...'; apache2-foreground"
