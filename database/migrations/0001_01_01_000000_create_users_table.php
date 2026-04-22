@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Run outside a transaction so each statement is independent on PostgreSQL.
+     */
+    public bool $withinTransaction = false;
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -14,15 +19,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email', 255);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->unique('email');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('email', 255)->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
@@ -42,8 +48,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
